@@ -1,0 +1,56 @@
+<!doctype html>
+<title>Workerman</title>
+<script src="term.js"></script>
+<style>
+  html {
+    background: #555;
+  }
+
+  h1 {
+    margin-bottom: 20px;
+    font: 20px/1.5 sans-serif;
+  }
+
+
+  .terminal {
+    float: left;
+    border: #000 solid 5px;
+    font-family: "DejaVu Sans Mono", "Liberation Mono", monospace;
+    font-size: 11px;
+    color: #f0f0f0;
+    background: #000;
+  }
+
+  .terminal-cursor {
+    color: #000;
+    background: #f0f0f0;
+  }
+
+</style>
+<script>
+window.addEventListener('load', function() {
+  var socket = new WebSocket('ws://workerman.net:7778');
+  socket.onopen = function() {
+    var term = new Terminal({
+        cols: 150,
+        rows: 80,
+        useStyle: false,
+        screenKeys: false,
+        cursorBlink: false
+    });
+
+    term.open(document.body);
+
+    //term.write('\x1b[31mWelcome to term.js!\x1b[m\r\n');
+
+    socket.onmessage = function(data) {
+      console.log(data.data);
+      term.write(data.data);
+    };
+
+    socket.onclose = function() {
+      term.destroy();
+    };
+  };
+}, false);
+</script>
