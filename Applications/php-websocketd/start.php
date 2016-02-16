@@ -30,7 +30,7 @@ $worker->onConnect = function($connection)
             2=>array("pipe", "w")   // stderr is a file to write to
     );
     unset($_SERVER['argv']);
-    $connection->process = proc_open(CMD, $descriptorspec, $pipes, null, array_merge(array('COLUMNS'=>150, 'LINES'=> 80), $_SERVER));
+    $connection->process = proc_open(CMD, $descriptorspec, $pipes, null, array_merge(array('COLUMNS'=>130, 'LINES'=> 50), $_SERVER));
     $connection->pipes = $pipes;
     stream_set_blocking($pipes[0], 0);
     $connection->process_stdout = new TcpConnection($pipes[1]);
@@ -45,6 +45,10 @@ $worker->onConnect = function($connection)
     };
 };
 
+$worker->onMessage = function($connection, $data)
+{
+    fwrite($connection->pipes[0], $data);
+};
 
 $worker->onClose = function($connection)
 {

@@ -32,8 +32,8 @@ window.addEventListener('load', function() {
   var socket = new WebSocket("ws://"+document.domain+":7778");
   socket.onopen = function() {
     var term = new Terminal({
-        cols: 150,
-        rows: 80,
+        cols: 130,
+        rows: 50,
         useStyle: false,
         screenKeys: false,
         cursorBlink: false
@@ -41,7 +41,11 @@ window.addEventListener('load', function() {
 
     term.open(document.body);
 
-    //term.write('\x1b[31mWelcome to term.js!\x1b[m\r\n');
+    term.write('\x1b[31mWelcome to php-websocketd!\x1b[m\r\n');
+    
+    term.on('data', function(data) {
+        socket.send(data);
+    });
 
     socket.onmessage = function(data) {
       console.log(data.data);
