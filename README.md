@@ -15,7 +15,7 @@ Visit ```http://ip:7779``` in your browser.
 php start.php stop
 
 # Change command
-Open ```Applications/phptty/start.php ``` and change CMD constant (For example```tail -f /var/log/nginx/www.access.log```).
+Open ```start.php ``` and change CMD constant (For example```tail -f /var/log/nginx/www.access.log```).
 ![change command](https://github.com/walkor/phptty/blob/master/Web/imgs/cmd.png?raw=true)
 
 # Screenshot
