@@ -5,7 +5,8 @@ Server based on [workerman](https://github.com/walkor/Workerman).
 
 # Start and stop
 **start**  
-php start.php start -d  
+Run with command ```php start.php start -d```   
+![star](https://github.com/walkor/php-websocketd/blob/master/Applications/php-websocketd/Web/imgs/start.png?raw=true)
 
 Visit ```http://ip:7779``` in your browser.
 
