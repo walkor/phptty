@@ -1,37 +1,89 @@
 <?php
 /**
- * run with command 
- * php start.php start
- */
+ * This file is part of workerman.
+*
+* Licensed under The MIT License
+* For full copyright and license information, please see the MIT-LICENSE.txt
+* Redistributions of files must retain the above copyright notice.
+*
+* @author walkor<walkor@workerman.net>
+* @copyright walkor<walkor@workerman.net>
+* @link http://www.workerman.net/
+* @license http://www.opensource.org/licenses/mit-license.php MIT License
+*/
 
-ini_set('display_errors', 'on');
-use Workerman\Worker;
+use \Workerman\Worker;
+use \Workerman\WebServer;
+use \Workerman\Connection\TcpConnection;
 
-if(strpos(strtolower(PHP_OS), 'win') === 0)
+// Command. For example 'tail -f /var/log/nginx/access.log'.
+define('CMD', 'htop');
+
+// Whether to allow client input.
+define('ALLOW_CLIENT_INPUT', true);
+
+// Uinix user for command. Recommend nobody www etc. 
+define('USER', 'www-data');
+
+require_once __DIR__ . '/../../Workerman/Autoloader.php';
+$worker = new Worker("Websocket://0.0.0.0:7778");
+$worker->name = 'websocketd';
+$worker->user = USER;
+
+$worker->onConnect = function($connection)
 {
-    exit("start.php not support windows, please use start_for_win.bat\n");
-}
+    $descriptorspec = array(
+            0=>array("pipe", "r"),  // stdin is a pipe that the child will read from
+            1=>array("pipe", "w"),  // stdout is a pipe that the child will write to
+            2=>array("pipe", "w")   // stderr is a file to write to
+    );
+    unset($_SERVER['argv']);
+    $connection->process = proc_open(CMD, $descriptorspec, $pipes, null, array_merge(array('COLUMNS'=>130, 'LINES'=> 50), $_SERVER));
+    $connection->pipes = $pipes;
+    stream_set_blocking($pipes[0], 0);
+    $connection->process_stdout = new TcpConnection($pipes[1]);
+    $connection->process_stdout->onMessage = function($process_connection, $data)use($connection)
+    {
+        $connection->send($data);
+    };
+    $connection->process_stdin = new TcpConnection($pipes[2]);
+    $connection->process_stdin->onMessage = function($process_connection, $data)use($connection)
+    {
+        $connection->send($data);
+    };
+};
 
-// 检查扩展
-if(!extension_loaded('pcntl'))
+$worker->onMessage = function($connection, $data)
 {
-    exit("Please install pcntl extension. See http://doc3.workerman.net/install/install.html\n");
-}
+    if(ALLOW_CLIENT_INPUT)
+    {
+        fwrite($connection->pipes[0], $data);
+    }
+};
 
-if(!extension_loaded('posix'))
+$worker->onClose = function($connection)
 {
-    exit("Please install posix extension. See http://doc3.workerman.net/install/install.html\n");
-}
+    $connection->process_stdin->close();
+    $connection->process_stdout->close();
+    fclose($connection->pipes[0]);
+    $connection->pipes = null;
+    proc_terminate($connection->process);
+    proc_close($connection->process);
+    $connection->process = null;
+};
 
-// 标记是全局启动
-define('GLOBAL_START', 1);
-
-require_once __DIR__ . '/Workerman/Autoloader.php';
-
-// 加载所有Applications/*/start.php，以便启动所有服务
-foreach(glob(__DIR__.'/Applications/*/start*.php') as $start_file)
+$worker->onWorkerStop = function($worker)
 {
-    require_once $start_file;
+    foreach($worker->connections as $connection)
+    {
+        $connection->close();
+    }
+};
+
+$webserver = new WebServer('http://0.0.0.0:7779');
+$webserver->addRoot('localhost', __DIR__ . '/Web');
+
+if(!defined('GLOBAL_START'))
+{
+    Worker::runAll();
 }
-// 运行所有服务
-Worker::runAll();
