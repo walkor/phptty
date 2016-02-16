@@ -29,7 +29,7 @@
 </style>
 <script>
 window.addEventListener('load', function() {
-  var socket = new WebSocket('ws://workerman.net:7778');
+  var socket = new WebSocket("ws://"+document.domain+":7778");
   socket.onopen = function() {
     var term = new Terminal({
         cols: 150,
