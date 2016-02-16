@@ -23,4 +23,6 @@ Open ```Applications/php-websocketd/start.php ``` and change CMD constant (For e
 
 # Related links
 [https://github.com/joewalnes/websocketd](https://github.com/joewalnes/websocketd)
+[https://github.com/chjj/term.js](https://github.com/chjj/term.js)
 [https://github.com/walkor/Workerman](https://github.com/walkor/Workerman)
+
