@@ -16,7 +16,11 @@ use \Workerman\Worker;
 use \Workerman\WebServer;
 use \Workerman\Connection\TcpConnection;
 
+// Command. For example 'tail -f /var/log/nginx/access.log'.
 define('CMD', 'htop');
+
+// Whether to allow client input.
+define('ALLOW_CLIENT_INPUT', true);
 
 require_once __DIR__ . '/../../Workerman/Autoloader.php';
 $worker = new Worker("Websocket://0.0.0.0:7778");
@@ -47,7 +51,10 @@ $worker->onConnect = function($connection)
 
 $worker->onMessage = function($connection, $data)
 {
-    fwrite($connection->pipes[0], $data);
+    if(ALLOW_CLIENT_INPUT)
+    {
+        fwrite($connection->pipes[0], $data);
+    }
 };
 
 $worker->onClose = function($connection)

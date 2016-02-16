@@ -41,8 +41,6 @@ window.addEventListener('load', function() {
 
     term.open(document.body);
 
-    term.write('\x1b[31mWelcome to php-websocketd!\x1b[m\r\n');
-    
     term.on('data', function(data) {
         socket.send(data);
     });
