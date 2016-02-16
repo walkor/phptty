@@ -9,7 +9,7 @@ php start.php start -d
 php start.php stop
 
 # Change command
-Open ```Applications/php-websocketd/start.php ``` and change CMD constant.
+Open ```Applications/php-websocketd/start.php ``` and change CMD constant (For example```tail -f /var/log/nginx/www.access.log```).
 ![change command](https://github.com/walkor/php-websocketd/blob/master/Applications/php-websocketd/Web/imgs/cmd.png?raw=true)
 
 # Screenshot
@@ -18,3 +18,7 @@ Open ```Applications/php-websocketd/start.php ``` and change CMD constant.
 
 **tail nginx access.log**
 ![tail](https://github.com/walkor/php-websocketd/blob/master/Applications/php-websocketd/Web/imgs/tail.png?raw=true)
+
+# Related links
+[https://github.com/joewalnes/websocketd](https://github.com/joewalnes/websocketd)
+[https://github.com/walkor/Workerman](https://github.com/walkor/Workerman)
