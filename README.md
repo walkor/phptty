@@ -1,6 +1,8 @@
 # php-websocketd
 Turn any program that uses STDIN/STDOUT into a WebSocket server and display in the browser.
 
+Server based on [workerman](https://github.com/walkor/Workerman).
+
 # Start and stop
 **start**  
 php start.php start -d  
