@@ -3,7 +3,9 @@ Turn any program that uses STDIN/STDOUT into a WebSocket server and display in t
 
 # Start and stop
 **start**  
-php start.php start -d
+php start.php start -d  
+
+Visit ```http://ip:7779``` in your browser.
 
 **stop**  
 php start.php stop
