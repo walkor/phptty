@@ -1,5 +1,5 @@
 # phptty
-A terminal in your browser using websocket php and  [workerman](https://github.com/walkor/Workerman).
+A terminal in your browser using websocket php and  [workerman](https://github.com/walkor/Workerman), similar to [gotty](https://github.com/yudai/gotty).
 
 # Screenshot
 ![Screenshot](https://github.com/walkor/phptty/blob/master/Web/imgs/example.gif?raw=true)
@@ -9,12 +9,12 @@ A terminal in your browser using websocket php and  [workerman](https://github.c
 
 # Start and stop
 **start**  
-Run with command ```php start.php start -d```   
+```php start.php start -d```   
 
 Visit ```http://ip:7779``` in your browser.
 
 **stop**  
-php start.php stop
+```php start.php stop```
 
 # Related links
 [https://github.com/yudai/gotty](https://github.com/yudai/gotty)  
