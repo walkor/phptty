@@ -32,19 +32,36 @@ $worker->user = USER;
 
 $worker->onConnect = function($connection)
 {
+    //To do this, PHP_CAN_DO_PTS must be enabled. See ext/standard/proc_open.c in PHP directory.
     $descriptorspec = array(
-            0=>array("pipe", "r"),  // stdin is a pipe that the child will read from
-            1=>array("pipe", "w"),  // stdout is a pipe that the child will write to
-            2=>array("pipe", "w")   // stderr is a file to write to
+        0 => array('pty'),
+        1 => array('pty'),
+        2 => array('pty')
     );
+    /*
+    //Pipe can not do PTY. Thus, many features of PTY can not be used.
+    //e.g. sudo, w3m, luit, all C programs using termios.h, etc.
+    $descriptorspec = array(
+        0=>array("pipe", "r"),
+        1=>array("pipe", "w"),
+        2=>array("pipe", "w")
+    );
+    */
     unset($_SERVER['argv']);
-    $connection->process = proc_open(CMD, $descriptorspec, $pipes, null, array_merge(array('COLUMNS'=>130, 'LINES'=> 50), $_SERVER));
+    $env = array_merge(
+        array('COLUMNS'=>130, 'LINES'=> 50), $_SERVER
+    );
+    $connection->process = proc_open(CMD, $descriptorspec, $pipes, null, $env);
     $connection->pipes = $pipes;
     stream_set_blocking($pipes[0], 0);
     $connection->process_stdout = new TcpConnection($pipes[1]);
     $connection->process_stdout->onMessage = function($process_connection, $data)use($connection)
     {
         $connection->send($data);
+    };
+    $connection->process_stdout->onClose = function($process_connection)use($connection)
+    {
+        $connection->close();   //Close WebSocket connection on process exit.
     };
     $connection->process_stdin = new TcpConnection($pipes[2]);
     $connection->process_stdin->onMessage = function($process_connection, $data)use($connection)
