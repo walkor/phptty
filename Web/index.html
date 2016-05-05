@@ -28,31 +28,30 @@
 
 </style>
 <script>
-window.addEventListener('load', function() {
-  var socket = new WebSocket("ws://"+document.domain+":7778");
-  socket.onopen = function() {
-    var term = new Terminal({
-        cols: 130,
-        rows: 50,
-        useStyle: false,
-        screenKeys: false,
-        cursorBlink: false
-    });
-
-    term.open(document.body);
-
-    term.on('data', function(data) {
-        socket.send(data);
-    });
-
-    socket.onmessage = function(data) {
-      console.log(data.data);
-      term.write(data.data);
-    };
-
-    socket.onclose = function() {
-      term.destroy();
-    };
-  };
-}, false);
+    if(window.WebSocket){
+        window.addEventListener('load', function() {
+            var socket = new WebSocket("ws://"+document.domain+":7778");
+            socket.onopen = function() {
+                var term = new Terminal({
+                    cols: 130,
+                    rows: 50,
+                    cursorBlink: false
+                });
+                term.open(document.body);
+                term.on('data', function(data) {
+                    socket.send(data);
+                });
+                socket.onmessage = function(data) {
+                    term.write(data.data);
+                };
+                socket.onclose = function() {
+                    term.destroy();
+                    alert("Connection closed.");
+                };
+            };
+        }, false);
+    }
+    else {
+        alert("Browser do not support WebSocket.");
+    }
 </script>
