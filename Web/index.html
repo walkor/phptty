@@ -45,8 +45,7 @@
                     term.write(data.data);
                 };
                 socket.onclose = function() {
-                    term.destroy();
-                    alert("Connection closed.");
+                    term.write("Connection closed.");
                 };
             };
         }, false);
