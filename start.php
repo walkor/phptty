@@ -33,12 +33,12 @@ $worker->user = USER;
 $worker->onConnect = function($connection)
 {
     //To do this, PHP_CAN_DO_PTS must be enabled. See ext/standard/proc_open.c in PHP directory.
-    $descriptorspec = array(
+    /*$descriptorspec = array(
         0 => array('pty'),
         1 => array('pty'),
         2 => array('pty')
-    );
-    /*
+    );*/
+    
     //Pipe can not do PTY. Thus, many features of PTY can not be used.
     //e.g. sudo, w3m, luit, all C programs using termios.h, etc.
     $descriptorspec = array(
@@ -46,7 +46,7 @@ $worker->onConnect = function($connection)
         1=>array("pipe", "w"),
         2=>array("pipe", "w")
     );
-    */
+    
     unset($_SERVER['argv']);
     $env = array_merge(
         array('COLUMNS'=>130, 'LINES'=> 50), $_SERVER
