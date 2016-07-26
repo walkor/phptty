@@ -5,7 +5,7 @@ A terminal in your browser using websocket php and  [workerman](https://github.c
 ![Screenshot](https://github.com/walkor/phptty/blob/master/Web/imgs/example.gif?raw=true)
 
 # Live demo
-[Live demo](http://45.55.93.159:7779/)
+[Live demo](http://47.88.13.70:7779/)
 
 # Start and stop
 **start**  
