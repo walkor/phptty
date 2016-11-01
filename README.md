@@ -8,9 +8,9 @@ A terminal in your browser using websocket php and  [workerman](https://github.c
 [Live demo](http://47.88.13.70:7779/)
 
 # install
-1. git clone https://github.com/walkor/phptty
+1. ```git clone https://github.com/walkor/phptty```
 
-2. composer install
+2. ```composer install```
 
 # Start and stop
 **start**  
